@@ -8,11 +8,20 @@ __v0_jsx-dev-runtime.ts
 
 # Environment variables (never commit secrets)
 .env
+.env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env*.local
+
+# Keys & credentials
+*.pem
+*.p12
+*.key
+credentials.json
+secrets/
 
 # Common ignores
 node_modules

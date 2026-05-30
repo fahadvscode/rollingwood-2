@@ -2,8 +2,24 @@ import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { leadRegistrationSchema, toRollingwoodLeadRow } from "@/lib/leads"
 
+const MAX_BODY_BYTES = 32_768
+
+export async function GET() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 })
+}
+
 export async function POST(request: Request) {
   try {
+    const contentType = request.headers.get("content-type") ?? ""
+    if (!contentType.includes("application/json")) {
+      return NextResponse.json({ error: "Invalid content type" }, { status: 415 })
+    }
+
+    const contentLength = request.headers.get("content-length")
+    if (contentLength && Number(contentLength) > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "Payload too large" }, { status: 413 })
+    }
+
     const body = await request.json()
     const parsed = leadRegistrationSchema.safeParse(body)
 

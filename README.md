@@ -1,6 +1,6 @@
-# Rollingwood Townhomes
+# Rollingwood Townhomes Brampton (Site 2)
 
-Marketing site for Rollingwood Townhomes (Next.js).
+Marketing site for Rollingwood Townhomes Brampton (Next.js).
 
 ## Images
 
@@ -23,10 +23,13 @@ Copy `.env.example` to `.env.local` for local development. Do not commit `.env.l
 
 ## Security
 
-- Lead form posts to `/api/leads` (server-side only).
-- Supabase keys are **not** in source code or Git.
-- `rollingwood_leads` RLS allows insert only for anonymous users.
-- Run `supabase/rollingwood_leads.sql` once in your Supabase SQL Editor.
+See [SECURITY.md](./SECURITY.md) for the full checklist.
+
+- Lead form posts to `/api/leads` (server-side only; no Supabase client in the browser).
+- Supabase keys live in **Vercel env vars** and `.env.local` locally — never in Git.
+- `SUPABASE_ANON_KEY` must **not** use the `NEXT_PUBLIC_` prefix.
+- `rollingwood_leads` RLS should allow **insert only** for `anon` (see `supabase/rollingwood_leads.sql`).
+- Security headers: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` (see `next.config.mjs`).
 
 ## Deploy
 
@@ -35,4 +38,4 @@ pnpm install
 pnpm build
 ```
 
-Connected repo: [github.com/fahadvscode/rollingwood](https://github.com/fahadvscode/rollingwood)
+Repo: [github.com/fahadvscode/rollingwood-2](https://github.com/fahadvscode/rollingwood-2) · Live: [rollingwood-2.vercel.app](https://rollingwood-2.vercel.app)
