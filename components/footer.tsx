@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, Phone, Mail } from "lucide-react"
+import { MapPin, Mail } from "lucide-react"
 import { images } from "@/lib/images"
 
 const footerLinks = {
@@ -89,15 +89,6 @@ export function Footer() {
                   150 Rollingwood Drive<br />
                   Brampton, ON L6Y 5J6
                 </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-accent flex-shrink-0" />
-                <Link
-                  href="tel:+1-000-000-0000"
-                  className="font-sans text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
-                >
-                  Contact for Details
-                </Link>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-accent flex-shrink-0" />

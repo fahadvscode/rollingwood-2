@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, X, Phone } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { images } from "@/lib/images"
 
@@ -49,14 +49,7 @@ export function Header() {
             ))}
           </div>
 
-          <div className="hidden lg:flex lg:items-center lg:gap-3">
-            <Link
-              href="tel:+1-000-000-0000"
-              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
-            >
-              <Phone className="h-4 w-4" />
-              <span className="sr-only">Call us</span>
-            </Link>
+          <div className="hidden lg:flex lg:items-center">
             <Button asChild className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-sm h-11 px-6 shadow-md shadow-secondary/20">
               <Link href="/register">Get price list</Link>
             </Button>
