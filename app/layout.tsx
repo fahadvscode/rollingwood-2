@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Source_Sans_3 } from 'next/font/google'
+import { Fraunces, Outfit } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { images } from '@/lib/images'
 import { siteUrl } from '@/lib/site'
 import { RegisterCtaBar } from '@/components/register-cta-bar'
 
-const playfair = Playfair_Display({
+const fraunces = Fraunces({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-serif',
 })
 
-const sourceSans = Source_Sans_3({
+const outfit = Outfit({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-sans',
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1e3a5f',
+  themeColor: '#c45c3e',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -186,7 +186,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
-      <body className={`${playfair.variable} ${sourceSans.variable} font-sans antialiased`}>
+      <body className={`${fraunces.variable} ${outfit.variable} font-sans antialiased`}>
         {children}
         <RegisterCtaBar />
         {process.env.NODE_ENV === 'production' && <Analytics />}

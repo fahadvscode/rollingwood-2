@@ -11,10 +11,10 @@ export function QuickRegisterSection() {
 
   if (submitted) {
     return (
-      <section id="register" className="py-16 bg-muted scroll-mt-24">
+      <section id="register" className="py-20 bg-muted scroll-mt-24">
         <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 text-center">
-          <CheckCircle2 className="h-14 w-14 text-secondary mx-auto mb-4" />
-          <h2 className="text-2xl font-serif font-bold text-primary mb-2">
+          <CheckCircle2 className="h-14 w-14 text-accent mx-auto mb-4" />
+          <h2 className="text-2xl font-serif font-semibold text-primary mb-2">
             You&apos;re on the list
           </h2>
           <p className="font-sans text-muted-foreground mb-6">
@@ -32,16 +32,14 @@ export function QuickRegisterSection() {
   }
 
   return (
-    <section id="register" className="py-16 bg-muted scroll-mt-24" aria-labelledby="quick-register-heading">
+    <section id="register" className="py-24 bg-muted scroll-mt-24" aria-labelledby="quick-register-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary uppercase">
-              2-minute signup
-            </span>
+            <span className="section-label">2-minute signup</span>
             <h2
               id="quick-register-heading"
-              className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-primary mb-4 text-balance"
+              className="mt-3 text-3xl sm:text-4xl font-serif font-semibold text-primary mb-4 text-balance"
             >
               Get floor plans &amp; pricing
             </h2>
@@ -51,13 +49,13 @@ export function QuickRegisterSection() {
             </p>
             <ul className="font-sans text-sm text-foreground space-y-2">
               <li className="flex gap-2">
-                <span className="text-secondary font-bold">✓</span> Classic &amp; Signature collections
+                <span className="text-accent font-bold">✓</span> Classic &amp; Signature collections
               </li>
               <li className="flex gap-2">
-                <span className="text-secondary font-bold">✓</span> From the $600,000s · Freehold
+                <span className="text-accent font-bold">✓</span> From the $600,000s · Freehold
               </li>
               <li className="flex gap-2">
-                <span className="text-secondary font-bold">✓</span> Occupancy 2027–2028
+                <span className="text-accent font-bold">✓</span> Occupancy 2027–2028
               </li>
             </ul>
             <p className="mt-6 font-sans text-sm">
@@ -67,7 +65,7 @@ export function QuickRegisterSection() {
             </p>
           </div>
 
-          <div className="bg-card border border-border rounded-md p-6 sm:p-8 shadow-sm">
+          <div className="section-card p-6 sm:p-8 shadow-lg">
             <p className="font-sans text-sm text-muted-foreground mb-5">
               Fields marked <span className="text-destructive">*</span> are required.
             </p>

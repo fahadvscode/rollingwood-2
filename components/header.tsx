@@ -20,33 +20,28 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/90 border-b-2 border-secondary/50 shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-card/90 backdrop-blur-md">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex shrink-0 items-center rounded-sm py-2 pl-2 pr-3 sm:py-2.5 sm:pl-3 sm:pr-4"
-          >
+        <div className="flex h-[4.5rem] items-center justify-between">
+          <Link href="/" className="flex shrink-0 items-center py-2">
             <Image
               src={images.logo}
               alt="Rollingwood Townhomes Brampton"
               width={180}
               height={50}
-              className="h-10 w-auto sm:h-11"
+              className="h-9 w-auto sm:h-10"
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:gap-8">
+          <div className="hidden lg:flex lg:items-center lg:gap-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={
                   item.highlight
-                    ? "font-sans text-sm font-semibold text-secondary hover:text-secondary/80 transition-colors"
-                    : "font-sans text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                    ? "font-sans text-sm font-semibold text-secondary px-4 py-2 rounded-full hover:bg-secondary/10 transition-colors"
+                    : "font-sans text-sm font-medium text-muted-foreground px-4 py-2 rounded-full hover:text-primary hover:bg-muted transition-colors"
                 }
               >
                 {item.name}
@@ -54,51 +49,51 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex lg:items-center lg:gap-4">
-            <Link href="tel:+1-000-000-0000" className="flex items-center gap-2 text-sm font-sans text-muted-foreground hover:text-primary transition-colors">
+          <div className="hidden lg:flex lg:items-center lg:gap-3">
+            <Link
+              href="tel:+1-000-000-0000"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+            >
               <Phone className="h-4 w-4" />
               <span className="sr-only">Call us</span>
             </Link>
-            <Button asChild className="rounded-md bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-sm h-11 px-5">
+            <Button asChild className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-sm h-11 px-6 shadow-md shadow-secondary/20">
               <Link href="/register">Get price list</Link>
             </Button>
           </div>
 
-          {/* Mobile menu button */}
           <button
             type="button"
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-foreground"
+            className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <span className="sr-only">Open main menu</span>
             {mobileMenuOpen ? (
-              <X className="h-6 w-6" aria-hidden="true" />
+              <X className="h-5 w-5" aria-hidden="true" />
             ) : (
-              <Menu className="h-6 w-6" aria-hidden="true" />
+              <Menu className="h-5 w-5" aria-hidden="true" />
             )}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border">
-            <div className="flex flex-col space-y-4">
+          <div className="lg:hidden py-5 border-t border-border">
+            <div className="flex flex-col gap-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={
                     item.highlight
-                      ? "font-sans text-base font-semibold text-secondary"
-                      : "font-sans text-base font-medium text-foreground/80 hover:text-primary transition-colors"
+                      ? "font-sans text-base font-semibold text-secondary px-4 py-3 rounded-xl bg-secondary/10"
+                      : "font-sans text-base font-medium text-foreground px-4 py-3 rounded-xl hover:bg-muted"
                   }
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Button asChild className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans w-full mt-4 h-12 text-base">
+              <Button asChild className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans w-full mt-4 h-12 text-base">
                 <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
                   Get price list — Register
                 </Link>

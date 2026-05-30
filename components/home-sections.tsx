@@ -5,90 +5,71 @@ import { Button } from "@/components/ui/button"
 import { images } from "@/lib/images"
 
 export function HeroSection() {
+  const stats = [
+    { label: "From", value: "$600,000s" },
+    { label: "Homes", value: "118" },
+    { label: "Sq Ft", value: "1,325–1,971" },
+    { label: "Move-in", value: "2027–28" },
+  ]
+
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-primary overflow-hidden">
+    <section className="relative min-h-[92vh] flex flex-col justify-end overflow-hidden bg-muted">
       <div className="absolute inset-0">
         <Image
           src={images.home.banner}
           alt="Rollingwood Townhomes Brampton exterior rendering at 150 Rollingwood Drive"
           fill
-          className="object-cover opacity-25"
+          className="object-cover scale-105"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/20" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 pb-28">
-        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-16 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 border border-accent/50 rounded-md mb-8">
-              <span className="font-sans text-xs font-semibold tracking-[0.2em] text-accent uppercase">
-                Pre-Construction · Brampton, ON
-              </span>
+      <div className="relative mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pt-28 pb-8 text-center">
+        <span className="section-label inline-block mb-6 rounded-full bg-card/90 px-5 py-2 shadow-sm backdrop-blur">
+          Pre-Construction · Brampton
+        </span>
+
+        <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-serif font-semibold text-primary leading-[1.05] mb-5 text-balance">
+          Rollingwood Townhomes Brampton
+        </h1>
+
+        <p className="font-sans text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 leading-relaxed">
+          Freehold 3- & 4-storey townhomes at 150 Rollingwood Drive by Regency Property
+        </p>
+        <p className="font-sans text-sm sm:text-base text-muted-foreground/90 max-w-3xl mx-auto mb-10 leading-relaxed">
+          Six models across Classic & Signature collections · Fletcher&apos;s Creek South · Turner Fleischer Architects
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+          <Button asChild size="lg" className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground h-14 px-10 text-base shadow-lg shadow-secondary/25">
+            <Link href="/#register">
+              Get Floor Plans & Pricing
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="btn-pill border-primary/20 bg-card/80 h-14 px-10 text-base hover:bg-card">
+            <Link href="/floor-plans">Explore Floor Plans</Link>
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl bg-card border border-border px-5 py-4 min-w-[7rem] shadow-md"
+            >
+              <p className="font-sans text-[0.65rem] font-bold uppercase tracking-widest text-accent mb-1">{stat.label}</p>
+              <p className="font-serif text-xl font-semibold text-primary">{stat.value}</p>
             </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-primary-foreground leading-[1.08] mb-6">
-              <span className="text-balance">Rollingwood Townhomes Brampton</span>
-            </h1>
-
-            <p className="text-xl sm:text-2xl font-serif text-primary-foreground/90 mb-4 leading-relaxed max-w-2xl">
-              Freehold 3- & 4-Storey Townhomes at 150 Rollingwood Drive — by Regency Property
-            </p>
-
-            <p className="font-sans text-base text-primary-foreground/80 mb-8 max-w-2xl leading-relaxed">
-              118 contemporary freehold townhomes in 6 models across two collections — the 3-storey Classic (1,325–1,403 sq ft) and the 4-storey Signature (1,861–1,971 sq ft) — coming to Fletcher&apos;s Creek South in 2027–2028. Designed by Turner Fleischer Architects. From the $600,000s.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="rounded-md bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-base px-8">
-                <Link href="/#register">
-                  Get Floor Plans & Price List
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-md border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary font-sans text-base px-8">
-                <Link href="/floor-plans">
-                  View Floor Plans
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-primary-foreground/15 bg-primary-foreground/5 backdrop-blur-sm p-6 sm:p-8 shadow-xl">
-            <p className="font-sans text-xs font-semibold tracking-[0.2em] text-secondary uppercase mb-6">
-              Project at a glance
-            </p>
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="font-sans text-xs font-semibold tracking-[0.12em] text-primary-foreground/70 uppercase mb-1">Starting From</p>
-                <p className="font-serif text-2xl font-bold text-primary-foreground">$600,000s</p>
-              </div>
-              <div>
-                <p className="font-sans text-xs font-semibold tracking-[0.12em] text-primary-foreground/70 uppercase mb-1">Total Units</p>
-                <p className="font-serif text-2xl font-bold text-primary-foreground">118 Homes</p>
-              </div>
-              <div>
-                <p className="font-sans text-xs font-semibold tracking-[0.12em] text-primary-foreground/70 uppercase mb-1">Sq Ft Range</p>
-                <p className="font-serif text-2xl font-bold text-primary-foreground">1,325–1,971</p>
-              </div>
-              <div>
-                <p className="font-sans text-xs font-semibold tracking-[0.12em] text-primary-foreground/70 uppercase mb-1">Occupancy</p>
-                <p className="font-serif text-2xl font-bold text-primary-foreground">2027–2028</p>
-              </div>
-            </div>
-            <p className="mt-6 pt-6 border-t border-primary-foreground/15 font-sans text-sm text-primary-foreground/75">
-              150 Rollingwood Drive · Fletcher&apos;s Creek South · Freehold ownership
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 bg-accent py-3">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <p className="font-sans text-sm font-semibold text-accent-foreground">
-            New HST Savings Now Available — Register Today to Learn More
-          </p>
-        </div>
+      <div className="relative bg-secondary py-3.5">
+        <p className="font-sans text-center text-sm font-semibold text-secondary-foreground tracking-wide">
+          New HST Savings Available — Register for Platinum Access
+        </p>
       </div>
     </section>
   )
@@ -113,13 +94,11 @@ export function FactsGrid() {
   ]
 
   return (
-    <section className="py-20 bg-muted">
+    <section className="py-24 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary uppercase">
-            Project Overview
-          </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-primary">
+        <div className="text-center mb-14">
+          <span className="section-label">Project Overview</span>
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-primary">
             At a Glance
           </h2>
         </div>
@@ -133,9 +112,9 @@ export function FactsGrid() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {facts.map((fact) => (
-            <div key={fact.label} className="bg-card p-5 border border-border rounded-sm">
+            <div key={fact.label} className="section-card p-5">
               <div className="flex items-start gap-3">
-                <fact.icon className="h-5 w-5 text-secondary flex-shrink-0 mt-0.5" />
+                <fact.icon className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-sans text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1">
                     {fact.label}
@@ -182,11 +161,10 @@ export function WhyRollingwood() {
   ]
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-muted">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Image column */}
-          <div className="relative aspect-[4/5] lg:sticky lg:top-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+          <div className="relative aspect-[4/5] lg:sticky lg:top-24 rounded-3xl overflow-hidden shadow-2xl ring-4 ring-card">
             <Image
               src={images.home.one}
               alt="Rollingwood Townhomes community rendering"
@@ -195,20 +173,17 @@ export function WhyRollingwood() {
             />
           </div>
 
-          {/* Content column */}
           <div>
-            <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary uppercase">
-              Why Choose
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-primary mb-8">
+            <span className="section-label">Why Choose</span>
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-primary mb-10">
               6 Reasons to Consider Rollingwood
             </h2>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {reasons.map((reason, index) => (
-                <div key={reason.title} className="group">
+                <div key={reason.title} className="group section-card p-6">
                   <div className="flex items-start gap-4">
-                    <span className="font-sans text-4xl font-bold text-secondary/30 group-hover:text-secondary transition-colors">
+                    <span className="font-serif text-3xl font-bold text-secondary/40 group-hover:text-secondary transition-colors tabular-nums">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <div>
@@ -253,20 +228,18 @@ export function CollectionsPreview() {
   ]
 
   return (
-    <section className="py-20 bg-primary">
+    <section className="py-24 bg-accent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary uppercase">
-            Two Collections
-          </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-primary-foreground">
+        <div className="text-center mb-14">
+          <span className="section-label text-accent-foreground/80">Two Collections</span>
+          <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-accent-foreground">
             Find Your Perfect Fit
           </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {collections.map((collection) => (
-            <div key={collection.name} className="bg-primary-foreground/5 border border-primary-foreground/20 overflow-hidden rounded-sm">
+            <div key={collection.name} className="overflow-hidden rounded-3xl bg-card shadow-xl ring-1 ring-black/5">
               {/* Collection image */}
               <div className="relative aspect-[16/10]">
                 <Image
@@ -279,41 +252,39 @@ export function CollectionsPreview() {
               
               <div className="p-8">
                 <div className="mb-6">
-                  <span className="font-sans text-xs font-semibold tracking-[0.2em] text-secondary uppercase">
-                    {collection.storeys}
-                  </span>
-                  <h3 className="text-2xl font-serif font-bold text-primary-foreground mt-1">
+                  <span className="section-label">{collection.storeys}</span>
+                  <h3 className="text-2xl font-serif font-semibold text-primary mt-2">
                     {collection.name}
                   </h3>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
-                    <p className="font-sans text-xs text-primary-foreground/60 uppercase tracking-wider">Size Range</p>
-                    <p className="font-serif text-lg text-primary-foreground font-semibold">{collection.sqft}</p>
+                    <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider">Size Range</p>
+                    <p className="font-serif text-lg text-primary font-semibold">{collection.sqft}</p>
                   </div>
                   <div>
-                    <p className="font-sans text-xs text-primary-foreground/60 uppercase tracking-wider">Bedrooms</p>
-                    <p className="font-serif text-lg text-primary-foreground font-semibold">{collection.beds}</p>
+                    <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider">Bedrooms</p>
+                    <p className="font-serif text-lg text-primary font-semibold">{collection.beds}</p>
                   </div>
                 </div>
 
-                <p className="font-sans text-sm text-primary-foreground/80 mb-6 leading-relaxed">
+                <p className="font-sans text-sm text-muted-foreground mb-6 leading-relaxed">
                   {collection.description}
                 </p>
 
                 <div className="mb-6">
-                  <p className="font-sans text-xs text-primary-foreground/60 uppercase tracking-wider mb-2">Models</p>
+                  <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-2">Models</p>
                   <div className="flex flex-wrap gap-2">
                     {collection.models.map((model) => (
-                      <span key={model} className="font-sans text-sm text-secondary bg-secondary/10 px-3 py-1 rounded-sm">
+                      <span key={model} className="font-sans text-sm text-accent-foreground bg-accent/15 px-3 py-1.5 rounded-full">
                         {model}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <Button asChild variant="outline" className="border-white bg-white/10 text-white hover:bg-white hover:text-primary font-sans w-full">
+                <Button asChild className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans w-full h-12">
                   <Link href="/floor-plans">
                     View Floor Plans
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -339,11 +310,10 @@ export function LocationPreview() {
   ]
 
   return (
-    <section className="py-20 bg-muted">
+    <section className="py-24 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Image */}
-          <div className="relative aspect-[4/3] order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+          <div className="relative aspect-[4/3] order-2 lg:order-1 rounded-3xl overflow-hidden shadow-xl">
             <Image
               src={images.home.two}
               alt="Rollingwood neighbourhood and community"
@@ -353,17 +323,15 @@ export function LocationPreview() {
           </div>
           
           <div className="order-1 lg:order-2">
-            <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary uppercase">
-              Prime Location
-            </span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-primary mb-6">
+            <span className="section-label">Prime Location</span>
+            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-primary mb-6">
               Connected to Everything
             </h2>
             <p className="font-serif text-lg text-foreground leading-relaxed mb-8">
               150 Rollingwood Drive sits at the southwestern edge of Brampton, just inside the Mavis Road and Ray Lawson Boulevard intersection. Highway 407 is approximately 5 minutes away and Highway 401 is approximately 10 minutes south, making this one of the most commute-friendly addresses in southwest Brampton.
             </p>
             
-            <div className="bg-card border border-border p-6 rounded-sm mb-6">
+            <div className="section-card p-6 mb-6">
               <h3 className="font-sans text-sm font-semibold tracking-wider text-muted-foreground uppercase mb-6">
                 Drive Times from Rollingwood
               </h3>
@@ -380,7 +348,7 @@ export function LocationPreview() {
               </div>
             </div>
             
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans">
+            <Button asChild className="btn-pill bg-primary hover:bg-primary/90 text-primary-foreground font-sans h-12 px-8">
               <Link href="/location">
                 View Full Location Details
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -395,28 +363,27 @@ export function LocationPreview() {
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-secondary">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        <span className="font-sans text-xs font-semibold tracking-[0.25em] text-secondary-foreground/70 uppercase">
+    <section className="py-24 bg-primary relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_50%,_#c45c3e_0%,_transparent_50%)]" />
+      <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+        <span className="font-sans text-[0.7rem] font-bold tracking-[0.28em] uppercase text-secondary">
           Get Started
         </span>
-        <h2 className="mt-2 text-3xl sm:text-4xl font-serif font-bold text-secondary-foreground mb-6">
+        <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground mb-6">
           Register for Platinum Access
         </h2>
-        <p className="font-sans text-lg text-secondary-foreground/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="font-sans text-lg text-primary-foreground/75 mb-10 max-w-2xl mx-auto leading-relaxed">
           Be the first to receive floor plans, pricing, and exclusive updates about Rollingwood Townhomes. Platinum registrants get priority selection on available units.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans text-base px-8">
+          <Button asChild size="lg" className="btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-base px-10 h-14 shadow-lg">
             <Link href="/#register">
               Register Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="border-white bg-white/10 text-white hover:bg-white hover:text-primary font-sans text-base px-8">
-            <Link href="/faq">
-              Read FAQ
-            </Link>
+          <Button asChild variant="outline" size="lg" className="btn-pill border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 font-sans text-base px-10 h-14">
+            <Link href="/faq">Read FAQ</Link>
           </Button>
         </div>
       </div>

@@ -14,19 +14,19 @@ export function RegisterCtaBar() {
 
   return (
     <div
-      className="fixed bottom-0 inset-x-0 z-40 border-t-2 border-secondary/40 bg-primary text-primary-foreground pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed bottom-0 inset-x-0 z-40 border-t border-secondary/30 bg-card/95 backdrop-blur-md shadow-[0_-8px_30px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)] md:hidden"
       role="region"
       aria-label="Register for pricing"
     >
       <div className="flex items-center gap-3 px-4 py-3">
-        <p className="font-sans text-xs text-primary-foreground/85 leading-tight flex-1 min-w-0">
-          <span className="font-semibold text-primary-foreground block">Rollingwood Townhomes Brampton</span>
-          From the $600,000s · Register for pricing
+        <p className="font-sans text-xs text-muted-foreground leading-tight flex-1 min-w-0">
+          <span className="font-semibold text-primary block">Rollingwood Brampton</span>
+          From $600,000s · Freehold
         </p>
         <Button
           asChild
           size="lg"
-          className="shrink-0 h-12 px-5 rounded-md bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-sm"
+          className="shrink-0 h-11 px-5 btn-pill bg-secondary hover:bg-secondary/90 text-secondary-foreground font-sans text-sm shadow-md"
         >
           <Link href="/register">
             Register
