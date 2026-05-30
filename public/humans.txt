@@ -1,0 +1,13 @@
+/* TEAM */
+Project: Rollingwood Townhomes Brampton
+Site: https://www.rollingwoodtownhomes-brampton.com
+Location: Brampton, Ontario, Canada
+
+/* THANKS */
+Developer: Regency Property
+Architect: Turner Fleischer Architects Inc.
+
+/* SITE */
+Last update: 2026-05-29
+Language: English
+Standards: HTML5, CSS3
