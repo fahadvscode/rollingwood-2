@@ -1,6 +1,6 @@
 /* TEAM */
 Project: Rollingwood Townhomes Brampton
-Site: https://www.rollingwoodtownhomes-brampton.com
+Site: https://www.rollingwoodtowns.ca
 Location: Brampton, Ontario, Canada
 
 /* THANKS */

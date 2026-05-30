@@ -38,4 +38,4 @@ pnpm install
 pnpm build
 ```
 
-Repo: [github.com/fahadvscode/rollingwood-2](https://github.com/fahadvscode/rollingwood-2) · Live: [rollingwood-2.vercel.app](https://rollingwood-2.vercel.app)
+Repo: [github.com/fahadvscode/rollingwood-2](https://github.com/fahadvscode/rollingwood-2) · Live: [www.rollingwoodtowns.ca](https://www.rollingwoodtowns.ca)

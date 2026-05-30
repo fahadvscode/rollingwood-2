@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.rollingwoodtownhomes-brampton.com/sitemap.xml
+Sitemap: https://www.rollingwoodtowns.ca/sitemap.xml
