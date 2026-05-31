@@ -44,7 +44,10 @@ type RegistrationFormProps = {
   onSuccess?: () => void
 }
 
-async function submitLead(data: FormData, defaults?: { buyerType?: string; homeInterest?: string }) {
+async function submitLead(data: FormData) {
+  const buyerType = String(data.get("buyerType") || "first-time")
+  const homeInterest = String(data.get("homeInterest") || data.get("interestedIn") || "not-sure")
+
   const res = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -52,9 +55,9 @@ async function submitLead(data: FormData, defaults?: { buyerType?: string; homeI
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
-      phone: data.get("phone"),
-      buyerType: data.get("buyerType") || defaults?.buyerType || "first-time",
-      homeInterest: data.get("interestedIn") || defaults?.homeInterest || "not-sure",
+      phone: data.get("phone") || undefined,
+      buyerType,
+      homeInterest,
       purchaseTimeframe: data.get("timeframe") || undefined,
       agentName: data.get("agentName") || undefined,
       brokerage: data.get("brokerage") || undefined,
@@ -146,12 +149,7 @@ export function RegistrationForm({
     setError(null)
 
     try {
-      await submitLead(
-        new FormData(e.currentTarget),
-        variant === "quick"
-          ? { buyerType: "first-time", homeInterest: "not-sure" }
-          : undefined
-      )
+      await submitLead(new FormData(e.currentTarget))
       onSuccess?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.")
@@ -218,13 +216,12 @@ export function RegistrationForm({
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor={`${id}-phone`} className="font-sans text-sm font-medium">
-            Phone <span className="text-destructive">*</span>
+            Phone <span className="text-muted-foreground font-normal">(optional)</span>
           </Label>
           <Input
             id={`${id}-phone`}
             name="phone"
             type="tel"
-            required
             autoComplete="tel"
             inputMode="tel"
             enterKeyHint={isQuick ? "go" : "next"}
@@ -234,10 +231,17 @@ export function RegistrationForm({
         </div>
       </div>
 
+      {isQuick && (
+        <>
+          <input type="hidden" name="buyerType" value="first-time" />
+          <input type="hidden" name="homeInterest" value="not-sure" />
+        </>
+      )}
+
       {!isQuick && (
         <>
           <RadioCards
-            name="interestedIn"
+            name="homeInterest"
             legend="Which collection interests you?"
             required
             defaultValue="not-sure"
@@ -249,7 +253,7 @@ export function RegistrationForm({
             legend="I am a…"
             required
             defaultValue="first-time"
-            columns={1}
+            columns={2}
             options={buyerTypeOptions}
           />
 
