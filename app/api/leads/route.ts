@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import {
-  buildLeadInsertAttempts,
-  isSchemaMismatchInsertError,
-  parseLeadRegistrationBody,
-} from "@/lib/leads"
+import { parseLeadRegistrationBody, toRollingwoodLeadRow } from "@/lib/leads"
 import { supabaseAnonKey, supabaseServiceRoleKey, supabaseUrl } from "@/lib/supabase/env"
 
 const MAX_BODY_BYTES = 32_768
@@ -52,56 +48,31 @@ export async function POST(request: Request) {
     }
 
     const supabase = createAdminClient()
-    const attempts = buildLeadInsertAttempts(parsed.data)
+    const row = toRollingwoodLeadRow(parsed.data)
 
-    let error: {
-      code?: string | null
-      message?: string | null
-      details?: string | null
-    } | null = null
-    const attemptErrors: string[] = []
-
-    for (const row of attempts) {
-      const result = await supabase.from("rollingwood_leads").insert(row)
-      error = result.error
-      if (!error) {
-        error = null
-        break
-      }
-      attemptErrors.push(
-        `${Object.keys(row).sort().join(",")}: ${error.code ?? "?"} ${error.message ?? ""}`
-      )
-      if (!isSchemaMismatchInsertError(error)) break
-    }
+    const { error } = await supabase.from("rollingwood_leads").insert(row)
 
     if (error) {
-      console.error(
-        "rollingwood_leads insert failed after",
-        attempts.length,
-        "attempts:",
-        attemptErrors.join(" | ")
-      )
-      console.error("last error:", error.code, error.message, error.details)
+      console.error("rollingwood_leads insert:", error.code, error.message, error.details)
 
       const msg = error.message?.toLowerCase() ?? ""
       let userMessage = "Failed to save registration. Please try again."
 
-      if (
-        error.code === "42703" ||
-        error.code === "PGRST204" ||
-        msg.includes("column") ||
-        msg.includes("schema cache")
-      ) {
+      if (error.code === "42703" || error.code === "PGRST204" || msg.includes("schema cache")) {
         userMessage =
-          "Registration is temporarily unavailable (database update required). Please try again later or contact support."
+          "Registration is temporarily unavailable. Please try again in a minute."
       } else if (error.code === "23514" || msg.includes("check constraint")) {
         userMessage = "Invalid form selection — please refresh and try again."
       } else if (error.code === "42501" || msg.includes("row-level security")) {
         userMessage =
           "Registration is temporarily unavailable (database permissions). Please contact support."
-      } else if (msg.includes("notify_new_rollingwood") || msg.includes("trigger")) {
+      } else if (
+        msg.includes("notify_new_rollingwood") ||
+        msg.includes("trigger") ||
+        msg.includes("function")
+      ) {
         userMessage =
-          "Registration could not be completed (server notification error). Please try again later or contact support."
+          "Registration could not be completed (notification error). Please try again later or contact support."
       }
 
       return NextResponse.json(
