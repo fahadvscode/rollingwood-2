@@ -55,14 +55,20 @@ export function buildLeadInsertAttempts(
 
   const realtorNote = input.is_realtor ? "Realtor: Yes" : "Realtor: No"
 
+  // Legacy first — production often has buyer_type/home_interest but not is_realtor yet.
   return [
-    { ...core, is_realtor: input.is_realtor },
+    {
+      ...core,
+      buyer_type: "first-time",
+      home_interest: "not-sure",
+    },
     {
       ...core,
       buyer_type: "first-time",
       home_interest: "not-sure",
       comments: realtorNote,
     },
+    { ...core, is_realtor: input.is_realtor },
     {
       ...core,
       is_realtor: input.is_realtor,

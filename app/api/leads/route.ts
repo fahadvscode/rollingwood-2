@@ -54,8 +54,12 @@ export async function POST(request: Request) {
     const supabase = createAdminClient()
     const attempts = buildLeadInsertAttempts(parsed.data)
 
-    let error: { code?: string | null; message?: string | null; details?: string | null } | null =
-      null
+    let error: {
+      code?: string | null
+      message?: string | null
+      details?: string | null
+    } | null = null
+    const attemptErrors: string[] = []
 
     for (const row of attempts) {
       const result = await supabase.from("rollingwood_leads").insert(row)
@@ -64,18 +68,32 @@ export async function POST(request: Request) {
         error = null
         break
       }
+      attemptErrors.push(
+        `${Object.keys(row).sort().join(",")}: ${error.code ?? "?"} ${error.message ?? ""}`
+      )
       if (!isSchemaMismatchInsertError(error)) break
     }
 
     if (error) {
-      console.error("rollingwood_leads insert:", error.code, error.message, error.details)
+      console.error(
+        "rollingwood_leads insert failed after",
+        attempts.length,
+        "attempts:",
+        attemptErrors.join(" | "
+      )
+      console.error("last error:", error.code, error.message, error.details)
 
       const msg = error.message?.toLowerCase() ?? ""
       let userMessage = "Failed to save registration. Please try again."
 
-      if (error.code === "42703" || msg.includes("column")) {
+      if (
+        error.code === "42703" ||
+        error.code === "PGRST204" ||
+        msg.includes("column") ||
+        msg.includes("schema cache")
+      ) {
         userMessage =
-          "Registration is temporarily unavailable (database schema mismatch). Please contact support."
+          "Registration is temporarily unavailable (database update required). Please try again later or contact support."
       } else if (error.code === "23514" || msg.includes("check constraint")) {
         userMessage = "Invalid form selection — please refresh and try again."
       } else if (error.code === "42501" || msg.includes("row-level security")) {

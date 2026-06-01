@@ -25,4 +25,6 @@ alter table public.rollingwood_leads
 alter table public.rollingwood_leads
   drop column if exists home_interest;
 
+notify pgrst, 'reload schema';
+
 commit;
