@@ -33,24 +33,61 @@ export const leadRegistrationSchema = z.object({
 
 export type LeadRegistrationInput = z.infer<typeof leadRegistrationSchema>
 
-export type RollingwoodLeadInsert = {
+type LeadCore = {
   first_name: string
   last_name: string
   email: string
   phone: string
-  is_realtor: boolean
   consent: boolean
 }
 
-export function toRollingwoodLeadRow(input: LeadRegistrationInput): RollingwoodLeadInsert {
-  return {
+/** Rows to try in order until one matches the live Supabase schema. */
+export function buildLeadInsertAttempts(
+  input: LeadRegistrationInput
+): Record<string, string | boolean>[] {
+  const core: LeadCore = {
     first_name: input.first_name,
     last_name: input.last_name,
     email: input.email.toLowerCase(),
     phone: input.phone,
-    is_realtor: input.is_realtor,
     consent: input.consent,
   }
+
+  const realtorNote = input.is_realtor ? "Realtor: Yes" : "Realtor: No"
+
+  return [
+    { ...core, is_realtor: input.is_realtor },
+    {
+      ...core,
+      buyer_type: "first-time",
+      home_interest: "not-sure",
+      comments: realtorNote,
+    },
+    {
+      ...core,
+      is_realtor: input.is_realtor,
+      buyer_type: "first-time",
+      home_interest: "not-sure",
+    },
+  ]
+}
+
+export function isSchemaMismatchInsertError(error: {
+  code?: string | null
+  message?: string | null
+}): boolean {
+  const code = error.code ?? ""
+  const msg = (error.message ?? "").toLowerCase()
+  if (code === "23502") {
+    return /buyer_type|home_interest|is_realtor/.test(msg)
+  }
+
+  return (
+    code === "42703" ||
+    code === "PGRST204" ||
+    msg.includes("column") ||
+    msg.includes("schema cache")
+  )
 }
 
 export function parseLeadRegistrationBody(body: unknown) {

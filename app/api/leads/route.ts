@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { parseLeadRegistrationBody, toRollingwoodLeadRow } from "@/lib/leads"
+import {
+  buildLeadInsertAttempts,
+  isSchemaMismatchInsertError,
+  parseLeadRegistrationBody,
+} from "@/lib/leads"
 import { supabaseAnonKey, supabaseServiceRoleKey, supabaseUrl } from "@/lib/supabase/env"
 
 const MAX_BODY_BYTES = 32_768
@@ -48,9 +52,20 @@ export async function POST(request: Request) {
     }
 
     const supabase = createAdminClient()
-    const row = toRollingwoodLeadRow(parsed.data)
+    const attempts = buildLeadInsertAttempts(parsed.data)
 
-    const { error } = await supabase.from("rollingwood_leads").insert(row)
+    let error: { code?: string | null; message?: string | null; details?: string | null } | null =
+      null
+
+    for (const row of attempts) {
+      const result = await supabase.from("rollingwood_leads").insert(row)
+      error = result.error
+      if (!error) {
+        error = null
+        break
+      }
+      if (!isSchemaMismatchInsertError(error)) break
+    }
 
     if (error) {
       console.error("rollingwood_leads insert:", error.code, error.message, error.details)
@@ -58,7 +73,10 @@ export async function POST(request: Request) {
       const msg = error.message?.toLowerCase() ?? ""
       let userMessage = "Failed to save registration. Please try again."
 
-      if (error.code === "23514" || msg.includes("check constraint")) {
+      if (error.code === "42703" || msg.includes("column")) {
+        userMessage =
+          "Registration is temporarily unavailable (database schema mismatch). Please contact support."
+      } else if (error.code === "23514" || msg.includes("check constraint")) {
         userMessage = "Invalid form selection — please refresh and try again."
       } else if (error.code === "42501" || msg.includes("row-level security")) {
         userMessage =
