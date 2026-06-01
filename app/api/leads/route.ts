@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         "rollingwood_leads insert failed after",
         attempts.length,
         "attempts:",
-        attemptErrors.join(" | "
+        attemptErrors.join(" | ")
       )
       console.error("last error:", error.code, error.message, error.details)
 
