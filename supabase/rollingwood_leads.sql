@@ -23,8 +23,7 @@ create table if not exists public.rollingwood_leads (
   last_name text not null,
   email text not null,
   phone text null,
-  buyer_type text not null,
-  home_interest text not null,
+  is_realtor boolean not null,
   purchase_timeframe text null,
   agent_name text null,
   brokerage text null,
@@ -37,28 +36,7 @@ create table if not exists public.rollingwood_leads (
   call_count integer null default 0,
   last_note text null,
   lead_type text null default 'registration'::text,
-  constraint rollingwood_leads_pkey primary key (id),
-  constraint rollingwood_leads_buyer_type_check check (
-    buyer_type = any (
-      array[
-        'first-time'::text,
-        'investor'::text,
-        'upgrader'::text,
-        'downsizer'::text,
-        'multigenerational'::text
-      ]
-    )
-  ),
-  constraint rollingwood_leads_home_interest_check check (
-    home_interest = any (
-      array[
-        'classic'::text,
-        'signature'::text,
-        'both'::text,
-        'not-sure'::text
-      ]
-    )
-  )
+  constraint rollingwood_leads_pkey primary key (id)
 );
 
 -- Indexes scoped to this table only

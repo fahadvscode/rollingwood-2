@@ -1,51 +1,29 @@
 import { z } from "zod"
 
-/** rollingwood_leads.buyer_type_check */
-export const buyerTypeValues = [
-  "first-time",
-  "investor",
-  "upgrader",
-  "downsizer",
-  "multigenerational",
-] as const
+export const realtorAnswerValues = ["yes", "no"] as const
+export type RealtorAnswer = (typeof realtorAnswerValues)[number]
 
-/** rollingwood_leads.home_interest_check (Lakeview-style “project” picker) */
-export const homeInterestValues = [
-  "classic",
-  "signature",
-  "both",
-  "not-sure",
-] as const
-
-export type BuyerType = (typeof buyerTypeValues)[number]
-export type HomeInterest = (typeof homeInterestValues)[number]
-
-function isBuyerType(v: string): v is BuyerType {
-  return (buyerTypeValues as readonly string[]).includes(v)
+function isRealtorAnswer(v: string): v is RealtorAnswer {
+  return (realtorAnswerValues as readonly string[]).includes(v)
 }
 
-function isHomeInterest(v: string): v is HomeInterest {
-  return (homeInterestValues as readonly string[]).includes(v)
+export function parseIsRealtorFromForm(v: unknown): boolean | undefined {
+  if (typeof v === "boolean") return v
+  const s = String(v ?? "").trim().toLowerCase()
+  if (s === "yes" || s === "true" || s === "1") return true
+  if (s === "no" || s === "false" || s === "0") return false
+  if (isRealtorAnswer(s)) return s === "yes"
+  return undefined
 }
 
-export function normalizeBuyerType(v: unknown): BuyerType {
-  const s = String(v ?? "").trim()
-  return isBuyerType(s) ? s : "first-time"
-}
-
-export function normalizeHomeInterest(v: unknown): HomeInterest {
-  const s = String(v ?? "").trim()
-  return isHomeInterest(s) ? s : "not-sure"
-}
-
-/** Same shape as Lakeview: core fields only + consent. */
 export const leadRegistrationSchema = z.object({
   first_name: z.string().trim().min(1).max(100),
   last_name: z.string().trim().min(1).max(100),
   email: z.string().trim().email().max(255),
   phone: z.string().trim().min(7, "Phone is required").max(30),
-  home_interest: z.enum(homeInterestValues),
-  buyer_type: z.enum(buyerTypeValues),
+  is_realtor: z
+    .union([z.boolean(), z.enum(realtorAnswerValues)])
+    .transform((v) => v === true || v === "yes"),
   consent: z
     .boolean()
     .optional()
@@ -60,12 +38,8 @@ export type RollingwoodLeadInsert = {
   last_name: string
   email: string
   phone: string
-  buyer_type: BuyerType
-  home_interest: HomeInterest
+  is_realtor: boolean
   consent: boolean
-  status: string
-  lead_temperature: string
-  lead_type: string
 }
 
 export function toRollingwoodLeadRow(input: LeadRegistrationInput): RollingwoodLeadInsert {
@@ -74,12 +48,8 @@ export function toRollingwoodLeadRow(input: LeadRegistrationInput): RollingwoodL
     last_name: input.last_name,
     email: input.email.toLowerCase(),
     phone: input.phone,
-    buyer_type: input.buyer_type,
-    home_interest: input.home_interest,
+    is_realtor: input.is_realtor,
     consent: input.consent,
-    status: "new",
-    lead_temperature: "warm",
-    lead_type: "registration",
   }
 }
 
@@ -89,16 +59,16 @@ export function parseLeadRegistrationBody(body: unknown) {
   }
 
   const raw = body as Record<string, unknown>
+  const isRealtor = parseIsRealtorFromForm(
+    raw.is_realtor ?? raw.isRealtor ?? raw.realtor
+  )
 
   return leadRegistrationSchema.safeParse({
     first_name: raw.first_name ?? raw.firstName,
     last_name: raw.last_name ?? raw.lastName,
     email: raw.email,
     phone: raw.phone,
-    home_interest: normalizeHomeInterest(
-      raw.home_interest ?? raw.homeInterest ?? raw.project ?? raw.interestedIn
-    ),
-    buyer_type: normalizeBuyerType(raw.buyer_type ?? raw.buyerType),
+    is_realtor: isRealtor ?? raw.is_realtor ?? raw.isRealtor ?? raw.realtor,
     consent: raw.consent ?? true,
   })
 }

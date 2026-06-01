@@ -10,20 +10,9 @@ import { cn } from "@/lib/utils"
 const inputClass =
   "h-12 text-base font-sans bg-background touch-manipulation"
 
-/** Maps to rollingwood_leads.home_interest (like Lakeview “project”). */
-const collectionOptions = [
-  { value: "classic", label: "Classic Collection", hint: "3-storey, 3-bed" },
-  { value: "signature", label: "Signature Collection", hint: "4-storey, 4–5 bed" },
-  { value: "both", label: "Both collections" },
-  { value: "not-sure", label: "Not sure yet" },
-]
-
-const buyerTypeOptions = [
-  { value: "first-time", label: "End user / First-time buyer" },
-  { value: "investor", label: "Investor" },
-  { value: "upgrader", label: "Upgrading" },
-  { value: "downsizer", label: "Downsizing" },
-  { value: "multigenerational", label: "Multigenerational" },
+const realtorOptions = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
 ]
 
 type RegistrationFormProps = {
@@ -42,8 +31,7 @@ async function submitLead(data: FormData) {
       last_name: data.get("last_name"),
       email: data.get("email"),
       phone: data.get("phone"),
-      home_interest: data.get("home_interest"),
-      buyer_type: data.get("buyer_type"),
+      is_realtor: data.get("is_realtor"),
       consent: true,
     }),
   })
@@ -62,13 +50,11 @@ function RadioCards({
   name,
   legend,
   options,
-  defaultValue,
   columns = 2,
 }: {
   name: string
   legend: string
-  options: { value: string; label: string; hint?: string }[]
-  defaultValue?: string
+  options: { value: string; label: string }[]
   columns?: 1 | 2
 }) {
   return (
@@ -80,14 +66,14 @@ function RadioCards({
       <div
         className={cn(
           "grid gap-2",
-          columns === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+          columns === 2 ? "grid-cols-2" : "grid-cols-1"
         )}
       >
         {options.map((option) => (
           <label
             key={option.value}
             className={cn(
-              "flex min-h-12 cursor-pointer items-center gap-3 rounded-md border border-input bg-background px-4 py-3 transition-colors",
+              "flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-background px-4 py-3 transition-colors",
               "has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-2",
               "has-[:checked]:border-secondary has-[:checked]:bg-secondary/10"
             )}
@@ -97,14 +83,10 @@ function RadioCards({
               name={name}
               value={option.value}
               required
-              defaultChecked={defaultValue === option.value}
               className="h-5 w-5 shrink-0 accent-primary"
             />
-            <span className="font-sans text-sm leading-snug">
-              <span className="font-medium text-foreground block">{option.label}</span>
-              {option.hint && (
-                <span className="text-muted-foreground text-xs">{option.hint}</span>
-              )}
+            <span className="font-sans text-sm font-medium text-foreground">
+              {option.label}
             </span>
           </label>
         ))}
@@ -207,25 +189,11 @@ export function RegistrationForm({
       </div>
 
       <RadioCards
-        name="home_interest"
-        legend="Which collection are you interested in?"
-        defaultValue="not-sure"
-        options={collectionOptions}
-        columns={isQuick ? 1 : 2}
+        name="is_realtor"
+        legend="Are you a realtor?"
+        options={realtorOptions}
+        columns={2}
       />
-
-      <RadioCards
-        name="buyer_type"
-        legend="I am a…"
-        defaultValue="first-time"
-        options={buyerTypeOptions}
-        columns={1}
-      />
-
-      <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-        By submitting, you agree to be contacted about Rollingwood Townhomes. We respect your
-        privacy and won&apos;t share your information.
-      </p>
 
       {error && (
         <p
