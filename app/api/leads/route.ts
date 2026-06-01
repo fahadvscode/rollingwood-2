@@ -55,18 +55,23 @@ export async function POST(request: Request) {
     if (error) {
       console.error("rollingwood_leads insert:", error.code, error.message, error.details)
 
-      const isCheckViolation =
-        error.code === "23514" ||
-        error.message?.toLowerCase().includes("check constraint")
+      const msg = error.message?.toLowerCase() ?? ""
+      let userMessage = "Failed to save registration. Please try again."
+
+      if (error.code === "23514" || msg.includes("check constraint")) {
+        userMessage = "Invalid form selection — please refresh and try again."
+      } else if (error.code === "42501" || msg.includes("row-level security")) {
+        userMessage =
+          "Registration is temporarily unavailable (database permissions). Please contact support."
+      } else if (msg.includes("notify_new_rollingwood") || msg.includes("trigger")) {
+        userMessage =
+          "Registration could not be completed (server notification error). Please try again later or contact support."
+      }
 
       return NextResponse.json(
         {
-          error: isCheckViolation
-            ? "Invalid selection — please refresh and submit again."
-            : "Failed to save registration. Please try again.",
-          ...(process.env.NODE_ENV === "development" && {
-            debug: { code: error.code, message: error.message },
-          }),
+          error: userMessage,
+          code: error.code ?? "unknown",
         },
         { status: 500 }
       )

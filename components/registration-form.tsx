@@ -45,21 +45,20 @@ type RegistrationFormProps = {
 }
 
 async function submitLead(data: FormData) {
-  const buyerType = String(data.get("buyerType") || "first-time")
-  const homeInterest = String(data.get("homeInterest") || data.get("interestedIn") || "not-sure")
+  const phone = String(data.get("phone") ?? "").trim()
 
   const res = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
+      first_name: data.get("first_name"),
+      last_name: data.get("last_name"),
       email: data.get("email"),
-      phone: data.get("phone") || undefined,
-      buyerType,
-      homeInterest,
-      purchaseTimeframe: data.get("timeframe") || undefined,
-      agentName: data.get("agentName") || undefined,
+      phone: phone.length >= 7 ? phone : undefined,
+      buyer_type: data.get("buyer_type") || "first-time",
+      home_interest: data.get("home_interest") || "not-sure",
+      purchase_timeframe: data.get("purchase_timeframe") || undefined,
+      agent_name: data.get("agent_name") || undefined,
       brokerage: data.get("brokerage") || undefined,
       comments: data.get("comments") || undefined,
       consent: true,
@@ -174,7 +173,7 @@ export function RegistrationForm({
           </Label>
           <Input
             id={`${id}-firstName`}
-            name="firstName"
+            name="first_name"
             type="text"
             required
             autoComplete="given-name"
@@ -189,7 +188,7 @@ export function RegistrationForm({
           </Label>
           <Input
             id={`${id}-lastName`}
-            name="lastName"
+            name="last_name"
             type="text"
             required
             autoComplete="family-name"
@@ -233,15 +232,15 @@ export function RegistrationForm({
 
       {isQuick && (
         <>
-          <input type="hidden" name="buyerType" value="first-time" />
-          <input type="hidden" name="homeInterest" value="not-sure" />
+          <input type="hidden" name="buyer_type" value="first-time" />
+          <input type="hidden" name="home_interest" value="not-sure" />
         </>
       )}
 
       {!isQuick && (
         <>
           <RadioCards
-            name="homeInterest"
+            name="home_interest"
             legend="Which collection interests you?"
             required
             defaultValue="not-sure"
@@ -249,7 +248,7 @@ export function RegistrationForm({
           />
 
           <RadioCards
-            name="buyerType"
+            name="buyer_type"
             legend="I am a…"
             required
             defaultValue="first-time"
@@ -277,7 +276,7 @@ export function RegistrationForm({
                 </Label>
                 <select
                   id={`${id}-timeframe`}
-                  name="timeframe"
+                  name="purchase_timeframe"
                   className={cn(inputClass, "flex w-full rounded-md border border-input px-3")}
                 >
                   <option value="">Select (optional)</option>
@@ -295,7 +294,7 @@ export function RegistrationForm({
                   </Label>
                   <Input
                     id={`${id}-agentName`}
-                    name="agentName"
+                    name="agent_name"
                     autoComplete="off"
                     className={inputClass}
                     placeholder="If you have a realtor"
