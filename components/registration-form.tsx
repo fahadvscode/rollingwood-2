@@ -1,40 +1,29 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowRight, ChevronDown, Loader2 } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
 
 const inputClass =
   "h-12 text-base font-sans bg-background touch-manipulation"
 
-const interestedInOptions = [
-  { value: "classic", label: "Classic", hint: "3-storey, 3-bed" },
-  { value: "signature", label: "Signature", hint: "4-storey, 4–5 bed" },
+/** Maps to rollingwood_leads.home_interest (like Lakeview “project”). */
+const collectionOptions = [
+  { value: "classic", label: "Classic Collection", hint: "3-storey, 3-bed" },
+  { value: "signature", label: "Signature Collection", hint: "4-storey, 4–5 bed" },
   { value: "both", label: "Both collections" },
   { value: "not-sure", label: "Not sure yet" },
 ]
 
 const buyerTypeOptions = [
-  { value: "first-time", label: "First-time buyer" },
+  { value: "first-time", label: "End user / First-time buyer" },
   { value: "investor", label: "Investor" },
   { value: "upgrader", label: "Upgrading" },
   { value: "downsizer", label: "Downsizing" },
   { value: "multigenerational", label: "Multigenerational" },
-]
-
-const timeframeOptions = [
-  { value: "asap", label: "Ready now" },
-  { value: "3-6-months", label: "3–6 months" },
-  { value: "6-12-months", label: "6–12 months" },
-  { value: "just-exploring", label: "Just exploring" },
 ]
 
 type RegistrationFormProps = {
@@ -45,8 +34,6 @@ type RegistrationFormProps = {
 }
 
 async function submitLead(data: FormData) {
-  const phone = String(data.get("phone") ?? "").trim()
-
   const res = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -54,13 +41,9 @@ async function submitLead(data: FormData) {
       first_name: data.get("first_name"),
       last_name: data.get("last_name"),
       email: data.get("email"),
-      phone: phone.length >= 7 ? phone : undefined,
-      buyer_type: data.get("buyer_type") || "first-time",
-      home_interest: data.get("home_interest") || "not-sure",
-      purchase_timeframe: data.get("purchase_timeframe") || undefined,
-      agent_name: data.get("agent_name") || undefined,
-      brokerage: data.get("brokerage") || undefined,
-      comments: data.get("comments") || undefined,
+      phone: data.get("phone"),
+      home_interest: data.get("home_interest"),
+      buyer_type: data.get("buyer_type"),
       consent: true,
     }),
   })
@@ -78,23 +61,21 @@ async function submitLead(data: FormData) {
 function RadioCards({
   name,
   legend,
-  required,
   options,
   defaultValue,
   columns = 2,
 }: {
   name: string
   legend: string
-  required?: boolean
+  options: { value: string; label: string; hint?: string }[]
   defaultValue?: string
   columns?: 1 | 2
-  options: { value: string; label: string; hint?: string }[]
 }) {
   return (
     <fieldset>
       <legend className="font-sans text-sm font-medium text-foreground mb-3">
         {legend}
-        {required && <span className="text-destructive ml-0.5">*</span>}
+        <span className="text-destructive ml-0.5">*</span>
       </legend>
       <div
         className={cn(
@@ -115,7 +96,7 @@ function RadioCards({
               type="radio"
               name={name}
               value={option.value}
-              required={required}
+              required
               defaultChecked={defaultValue === option.value}
               className="h-5 w-5 shrink-0 accent-primary"
             />
@@ -140,7 +121,6 @@ export function RegistrationForm({
 }: RegistrationFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [optionalOpen, setOptionalOpen] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -164,35 +144,32 @@ export function RegistrationForm({
       id={id}
       onSubmit={handleSubmit}
       className={cn("space-y-5", className)}
-      noValidate={false}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor={`${id}-firstName`} className="font-sans text-sm font-medium">
+          <Label htmlFor={`${id}-first_name`} className="font-sans text-sm font-medium">
             First name <span className="text-destructive">*</span>
           </Label>
           <Input
-            id={`${id}-firstName`}
+            id={`${id}-first_name`}
             name="first_name"
             type="text"
             required
             autoComplete="given-name"
-            enterKeyHint="next"
             className={inputClass}
             placeholder="Jane"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor={`${id}-lastName`} className="font-sans text-sm font-medium">
+          <Label htmlFor={`${id}-last_name`} className="font-sans text-sm font-medium">
             Last name <span className="text-destructive">*</span>
           </Label>
           <Input
-            id={`${id}-lastName`}
+            id={`${id}-last_name`}
             name="last_name"
             type="text"
             required
             autoComplete="family-name"
-            enterKeyHint="next"
             className={inputClass}
             placeholder="Smith"
           />
@@ -208,130 +185,42 @@ export function RegistrationForm({
             required
             autoComplete="email"
             inputMode="email"
-            enterKeyHint="next"
             className={inputClass}
             placeholder="you@email.com"
           />
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor={`${id}-phone`} className="font-sans text-sm font-medium">
-            Phone <span className="text-muted-foreground font-normal">(optional)</span>
+            Phone <span className="text-destructive">*</span>
           </Label>
           <Input
             id={`${id}-phone`}
             name="phone"
             type="tel"
+            required
             autoComplete="tel"
             inputMode="tel"
-            enterKeyHint={isQuick ? "go" : "next"}
             className={inputClass}
             placeholder="(416) 555-0123"
           />
         </div>
       </div>
 
-      {isQuick && (
-        <>
-          <input type="hidden" name="buyer_type" value="first-time" />
-          <input type="hidden" name="home_interest" value="not-sure" />
-        </>
-      )}
+      <RadioCards
+        name="home_interest"
+        legend="Which collection are you interested in?"
+        defaultValue="not-sure"
+        options={collectionOptions}
+        columns={isQuick ? 1 : 2}
+      />
 
-      {!isQuick && (
-        <>
-          <RadioCards
-            name="home_interest"
-            legend="Which collection interests you?"
-            required
-            defaultValue="not-sure"
-            options={interestedInOptions}
-          />
-
-          <RadioCards
-            name="buyer_type"
-            legend="I am a…"
-            required
-            defaultValue="first-time"
-            columns={2}
-            options={buyerTypeOptions}
-          />
-
-          <Collapsible open={optionalOpen} onOpenChange={setOptionalOpen}>
-            <CollapsibleTrigger
-              type="button"
-              className="flex w-full items-center justify-between rounded-md border border-dashed border-input bg-muted/50 px-4 py-3 font-sans text-sm font-medium text-foreground hover:bg-muted transition-colors"
-            >
-              <span>Add optional details (agent, timeline, questions)</span>
-              <ChevronDown
-                className={cn(
-                  "h-5 w-5 shrink-0 text-muted-foreground transition-transform",
-                  optionalOpen && "rotate-180"
-                )}
-              />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-4 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor={`${id}-timeframe`} className="font-sans text-sm font-medium">
-                  Purchase timeline
-                </Label>
-                <select
-                  id={`${id}-timeframe`}
-                  name="purchase_timeframe"
-                  className={cn(inputClass, "flex w-full rounded-md border border-input px-3")}
-                >
-                  <option value="">Select (optional)</option>
-                  {timeframeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor={`${id}-agentName`} className="font-sans text-sm font-medium">
-                    Agent name
-                  </Label>
-                  <Input
-                    id={`${id}-agentName`}
-                    name="agent_name"
-                    autoComplete="off"
-                    className={inputClass}
-                    placeholder="If you have a realtor"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`${id}-brokerage`} className="font-sans text-sm font-medium">
-                    Brokerage
-                  </Label>
-                  <Input
-                    id={`${id}-brokerage`}
-                    name="brokerage"
-                    autoComplete="organization"
-                    className={inputClass}
-                    placeholder="Brokerage name"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`${id}-comments`} className="font-sans text-sm font-medium">
-                  Questions or comments
-                </Label>
-                <textarea
-                  id={`${id}-comments`}
-                  name="comments"
-                  rows={3}
-                  className={cn(
-                    "flex w-full rounded-md border border-input bg-background px-3 py-3 text-base font-sans resize-none touch-manipulation",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  )}
-                  placeholder="Anything you'd like us to know?"
-                />
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </>
-      )}
+      <RadioCards
+        name="buyer_type"
+        legend="I am a…"
+        defaultValue="first-time"
+        options={buyerTypeOptions}
+        columns={1}
+      />
 
       <p className="font-sans text-xs text-muted-foreground leading-relaxed">
         By submitting, you agree to be contacted about Rollingwood Townhomes. We respect your

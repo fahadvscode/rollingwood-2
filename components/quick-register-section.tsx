@@ -60,7 +60,7 @@ export function QuickRegisterSection() {
             </ul>
             <p className="mt-6 font-sans text-sm">
               <Link href="/register" className="text-primary font-medium underline-offset-4 hover:underline">
-                Need to add more details? Use the full registration form →
+                Prefer a dedicated registration page? Register here →
               </Link>
             </p>
           </div>
